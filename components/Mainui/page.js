@@ -1,11 +1,16 @@
+"use client"
 import React from 'react'
-
+import { formsubmit } from '@/server_actions/formsubmit'
+import { useState } from 'react'
 
 const Mainui = () => {
+    
+    const [data, setData] = useState([])
+
     return (
         <>
             <div className='background_color'>
-                <div class="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"><div class="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-[#FF6500] opacity-20 blur-[100px]"></div></div>
+                <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"><div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-[#FF6500] opacity-20 blur-[100px]"></div></div>
             </div>
 
             <div className='flex flex-col gap-2 justify-center items-center  my-10 text-[#1E3E62]'>
@@ -16,27 +21,49 @@ const Mainui = () => {
                 <p className='font-bold'>Your Own Password Manager</p>
             </div>
 
-
-            <div className='input_fields flex flex-col w-[80%] mx-auto my-10 '>
-                <form className='flex flex-col gap-3' action="/">
+            <div className='form input_fields flex flex-col w-[80%] mx-auto my-10 '>
+                <form className='flex flex-col gap-3' action={formsubmit}>
                     <div className='flex gap-3'>
-                        <label className='font-bold text-lg text-[#1E3E62] mx-1 px-6 cursor-pointer' htmlFor="link">Link:</label>
-                        <input className="border-2 w-full border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='Enter the Website link' id='link'/>
+                        <label className='font-bold text-lg text-[#1E3E62] mx-1 px-6 cursor-pointer' htmlFor="link">Site:</label>
+                        <input className="border-2 w-[115%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='Enter the Website link' id='link' name='link' />
+
+                        <label className='font-bold text-lg text-[#1E3E62] px-6 cursor-pointer' htmlFor="sitename">SiteName:</label>
+                        <input className="border-2 w-[118%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='SiteName' id='sitename' name='sitename' />
                     </div>
                     <div className='flex gap-3'>
                         <label className='font-bold text-lg text-[#1E3E62] mx-1 cursor-pointer' htmlFor="username">Username:</label>
-                        <input className='border-2 w-[80%] border-[#FF6500] rounded-3xl px-5 text-xl font-bold text-[#1E3E62]' type="text" name="" id="username" placeholder='Username' />
+                        <input className='border-2 w-[80%] border-[#FF6500] rounded-3xl px-5 text-xl font-bold text-[#1E3E62]' type="text" name="username" id="username" placeholder='Username' />
                         <label className='font-bold text-lg text-[#1E3E62] mx-1 cursor-pointer' htmlFor="password">Passsword:</label>
-                        <input className='border-2 w-[80%] border-[#FF6500] rounded-3xl px-5 text-xl font-bold text-[#1E3E62]' type="text" name="" id="password" placeholder='Passsword' />
+                        <input className='border-2 w-[80%] border-[#FF6500] rounded-3xl px-5 text-xl font-bold text-[#1E3E62]' type="text" name="password" id="password" placeholder='Passsword' />
                     </div>
                     <div className='text-center my-2'>
-                        <input className='font-bold text-lg text-white bg-[#FF6500] px-4 py-1 rounded-lg cursor-pointer hover:scale-105' type="submit" value="Add Password" />
+                        <input className='font-bold text-lg text-[#FF6500]  border-2 border-[#FF6500] 
+                        px-4 py-1 rounded-lg cursor-pointer
+                        hover:scale-105 hover:bg-[#FF6500] hover:text-white
+                        transition duration-75'
+                            type="submit" value="Add Password" />
                     </div>
                 </form>
             </div>
 
-            <div className='password_cards'>
-
+            <div className='password_tables flex flex-col items-center justify-center text-[#1E3E62]'>
+                <h2 className='font-bold text-4xl my-4'>Your Passwords</h2>
+                <table className="table-auto  text-center w-[80vw] overflow-hidden rounded-lg">
+                    <thead className='bg-[#FF6500] text-white font-bold text-xl'>
+                        <tr className='border border-black'>
+                            <th className='min-w-32 p-2'>SiteName</th>
+                            <th className='min-w-32 p-2'>UserName</th>
+                            <th className='min-w-32 p-2'>Password</th>
+                        </tr>
+                    </thead>
+                    <tbody className='font-bold bg-orange-200'>
+                        <tr className='border border-black'>
+                            <td className='min-w-32 p-2'>The Sliding Mr. Bones (Next Stop, Pottersville)</td>
+                            <td className='min-w-32 p-2'>Malcolm Lockyer</td>
+                            <td className='min-w-32 p-2'>1961</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
         </>
