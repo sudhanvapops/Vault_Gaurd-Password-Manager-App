@@ -36,5 +36,5 @@ yarn-error.log*
 next-env.d.ts
 
 # personal
-/notes.md
 /Notes.md 
+/notes.md

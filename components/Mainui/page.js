@@ -1,11 +1,16 @@
 "use client"
-import React from 'react'
-import { formsubmit } from '@/server_actions/formsubmit'
-import { useState } from 'react'
+
+import { formsubmit } from '@/_actions/formsubmit'
+import React, { useState, useRef } from "react"
+
+
+
+
 
 const Mainui = () => {
-    
-    const [data, setData] = useState([])
+
+    const [data, setData] = useState([{ name: "Sudhanva", age: "12" }])
+    let ref = useRef()
 
     return (
         <>
@@ -22,10 +27,14 @@ const Mainui = () => {
             </div>
 
             <div className='form input_fields flex flex-col w-[80%] mx-auto my-10 '>
-                <form className='flex flex-col gap-3' action={formsubmit}>
+                <form className='flex flex-col gap-3' ref={ref} action={
+                    (formdata) => {
+                        formsubmit(formdata)
+                        ref.current.reset()
+                    }}>
                     <div className='flex gap-3'>
-                        <label className='font-bold text-lg text-[#1E3E62] mx-1 px-6 cursor-pointer' htmlFor="link">Site:</label>
-                        <input className="border-2 w-[115%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='Enter the Website link' id='link' name='link' />
+                        <label className='font-bold text-lg text-[#1E3E62] mx-1 px-6 cursor-pointer' htmlFor="link_">Site:</label>
+                        <input className="border-2 w-[115%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='Enter the Website link' id='link_' name='link' />
 
                         <label className='font-bold text-lg text-[#1E3E62] px-6 cursor-pointer' htmlFor="sitename">SiteName:</label>
                         <input className="border-2 w-[118%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='SiteName' id='sitename' name='sitename' />
@@ -58,7 +67,7 @@ const Mainui = () => {
                     </thead>
                     <tbody className='font-bold bg-orange-200'>
                         <tr className='border border-black'>
-                            <td className='min-w-32 p-2'>The Sliding Mr. Bones (Next Stop, Pottersville)</td>
+                            <td className='min-w-32 p-2'>{data[0].name}</td>
                             <td className='min-w-32 p-2'>Malcolm Lockyer</td>
                             <td className='min-w-32 p-2'>1961</td>
                         </tr>
