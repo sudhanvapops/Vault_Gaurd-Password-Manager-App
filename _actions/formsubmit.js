@@ -11,7 +11,7 @@ async function formsubmit(formdata) {
         await dbconnect()
 
         const user_details = new user_db({
-            siteName: formdata.get("sitename") ,
+            siteName: formdata.get("sitename"),
             link: formdata.get("link"),
             username: formdata.get("username"),
             password: formdata.get("password"),

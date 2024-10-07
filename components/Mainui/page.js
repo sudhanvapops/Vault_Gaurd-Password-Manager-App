@@ -1,16 +1,29 @@
 "use client"
 
 import { formsubmit } from '@/_actions/formsubmit'
-import React, { useState, useRef } from "react"
-
-
-
+import React, { useState, useRef, useEffect } from "react"
+import { load_data } from '@/_actions/load_data'
 
 
 const Mainui = () => {
 
-    const [data, setData] = useState([{ name: "Sudhanva", age: "12" }])
+    const [data, setData] = useState([])
     let ref = useRef()
+
+    // To Load The Data From the Database
+    const fetchData = async () => {
+        try {
+            const data = await load_data(); 
+            setData(data); 
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
 
     return (
         <>
@@ -28,9 +41,10 @@ const Mainui = () => {
 
             <div className='form input_fields flex flex-col w-[80%] mx-auto my-10 '>
                 <form className='flex flex-col gap-3' ref={ref} action={
-                    (formdata) => {
-                        formsubmit(formdata)
+                    async (formdata) => {
+                        await formsubmit(formdata)
                         ref.current.reset()
+                        fetchData()
                     }}>
                     <div className='flex gap-3'>
                         <label className='font-bold text-lg text-[#1E3E62] mx-1 px-6 cursor-pointer' htmlFor="link_">Site:</label>
@@ -55,7 +69,7 @@ const Mainui = () => {
                 </form>
             </div>
 
-            <div className='password_tables flex flex-col items-center justify-center text-[#1E3E62]'>
+            <div className='password_tables flex flex-col items-center justify-center text-[#1E3E62] my-10'>
                 <h2 className='font-bold text-4xl my-4'>Your Passwords</h2>
                 <table className="table-auto  text-center w-[80vw] overflow-hidden rounded-lg">
                     <thead className='bg-[#FF6500] text-white font-bold text-xl'>
@@ -66,11 +80,19 @@ const Mainui = () => {
                         </tr>
                     </thead>
                     <tbody className='font-bold bg-orange-200'>
-                        <tr className='border border-black'>
-                            <td className='min-w-32 p-2'>{data[0].name}</td>
-                            <td className='min-w-32 p-2'>Malcolm Lockyer</td>
-                            <td className='min-w-32 p-2'>1961</td>
-                        </tr>
+                        {data.length > 0 ? (
+                            data.map((item, index) => (
+                                <tr key={index} className='border border-black'>
+                                    <td className='min-w-32 p-2'>{item.siteName}</td>
+                                    <td className='min-w-32 p-2'>{item.username}</td>
+                                    <td className='min-w-32 p-2'>{item.password}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3" className="p-4">No passwords found</td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </div>
