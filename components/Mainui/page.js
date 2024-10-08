@@ -3,18 +3,26 @@
 import { formsubmit } from '@/_actions/formsubmit'
 import React, { useState, useRef, useEffect } from "react"
 import { load_data } from '@/_actions/load_data'
-
+import { deleteData } from '@/_actions/deleteData'
+import { editData } from '@/_actions/editData'
 
 const Mainui = () => {
 
     const [data, setData] = useState([])
+    const [formData, setFormData] = useState({
+        link: '',
+        siteName: '',
+        username: '',
+        password: ''
+      });
+    const [edit, setEdit] = useState(false)
     let ref = useRef()
 
     // To Load The Data From the Database
     const fetchData = async () => {
         try {
-            const data = await load_data(); 
-            setData(data); 
+            const data = await load_data();
+            setData(data);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -41,30 +49,35 @@ const Mainui = () => {
 
             <div className='form input_fields flex flex-col w-[80%] mx-auto my-10 '>
                 <form className='flex flex-col gap-3' ref={ref} action={
-                    async (formdata) => {
-                        await formsubmit(formdata)
+                    async (formdata_) => {
+                        await formsubmit(formdata_)
+                        setFormData({ link: '', siteName: '', username: '', password: '' });
                         ref.current.reset()
                         fetchData()
+                        setEdit(false)
                     }}>
                     <div className='flex gap-3'>
                         <label className='font-bold text-lg text-[#1E3E62] mx-1 px-6 cursor-pointer' htmlFor="link_">Site:</label>
-                        <input className="border-2 w-[115%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='Enter the Website link' id='link_' name='link' />
+                        <input className="border-2 w-[115%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='Enter the Website link' id='link_' name='link' value={formData.link} onChange={(e) => setFormData({ ...formData, link: e.target.value })}/>
 
-                        <label className='font-bold text-lg text-[#1E3E62] px-6 cursor-pointer' htmlFor="sitename">SiteName:</label>
-                        <input className="border-2 w-[118%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='SiteName' id='sitename' name='sitename' />
+                        <label className='font-bold text-lg text-[#1E3E62] px-6 cursor-pointer' htmlFor="siteName">SiteName:</label>
+                        <input className="border-2 w-[118%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='SiteName' id='siteName' name='siteName' value={formData.siteName}
+                        onChange={(e) => setFormData({ ...formData, siteName: e.target.value })}/>
                     </div>
                     <div className='flex gap-3'>
                         <label className='font-bold text-lg text-[#1E3E62] mx-1 cursor-pointer' htmlFor="username">Username:</label>
-                        <input className='border-2 w-[80%] border-[#FF6500] rounded-3xl px-5 text-xl font-bold text-[#1E3E62]' type="text" name="username" id="username" placeholder='Username' />
+                        <input className='border-2 w-[80%] border-[#FF6500] rounded-3xl px-5 text-xl font-bold text-[#1E3E62]' type="text" name="username" id="username" placeholder='Username' value={formData.username}
+                        onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
                         <label className='font-bold text-lg text-[#1E3E62] mx-1 cursor-pointer' htmlFor="password">Passsword:</label>
-                        <input className='border-2 w-[80%] border-[#FF6500] rounded-3xl px-5 text-xl font-bold text-[#1E3E62]' type="text" name="password" id="password" placeholder='Passsword' />
+                        <input className='border-2 w-[80%] border-[#FF6500] rounded-3xl px-5 text-xl font-bold text-[#1E3E62]' type="text" name="password" id="password" placeholder='Passsword' value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
                     </div>
                     <div className='text-center my-2'>
                         <input className='font-bold text-lg text-[#FF6500]  border-2 border-[#FF6500] 
                         px-4 py-1 rounded-lg cursor-pointer
                         hover:scale-105 hover:bg-[#FF6500] hover:text-white
                         transition duration-75'
-                            type="submit" value="Add Password" />
+                            type="submit" value={edit?"Edit":"Add Password"} />
                     </div>
                 </form>
             </div>
@@ -77,6 +90,7 @@ const Mainui = () => {
                             <th className='min-w-32 p-2'>SiteName</th>
                             <th className='min-w-32 p-2'>UserName</th>
                             <th className='min-w-32 p-2'>Password</th>
+                            <th className='min-w-32 p-2'>Actions</th>
                         </tr>
                     </thead>
                     <tbody className='font-bold bg-orange-200'>
@@ -85,12 +99,42 @@ const Mainui = () => {
                                 <tr key={index} className='border border-black'>
                                     <td className='min-w-32 p-2'>{item.siteName}</td>
                                     <td className='min-w-32 p-2'>{item.username}</td>
-                                    <td className='min-w-32 p-2'>{item.password}</td>
+                                    <td className='min-w-32 p-2 flex justify-center items-center'>{item.password}</td>
+                                    <td className="actions" >
+                                        <div>
+                                            <button className="delete mx-4" onClick={
+                                                async ()=>{
+                                                    await deleteData(item._id)
+                                                    fetchData()}
+                                                } >
+                                                <lord-icon
+                                                    src="https://cdn.lordicon.com/hwjcdycb.json"
+                                                    stroke="bold"
+                                                    trigger="hover"
+                                                >
+                                                </lord-icon>
+                                            </button>
+                                            <button className="edit mx-4" onClick={() =>
+                                                 {
+                                                    editData(item,setFormData)
+                                                    setEdit(true)
+                                                    fetchData()
+                                                }
+                                                 } >
+                                                <lord-icon
+                                                    src="https://cdn.lordicon.com/exymduqj.json"
+                                                    trigger="hover"
+                                                    stroke="bold"
+                                                    state="hover-line">
+                                                </lord-icon>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="3" className="p-4">No passwords found</td>
+                                <td colSpan="4" className="p-4 text-xl font-bold">No passwords found</td>
                             </tr>
                         )}
                     </tbody>
