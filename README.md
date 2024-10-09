@@ -28,7 +28,7 @@ A simple password manager app built with **Next.js 14**, allowing users to store
 ---
 ## Post Script PS : 
 
-##### Still there is a lot to learn and this code can be  :improved dramatically
+##### Still there is a lot to learn and this code can be improved dramatically
 
 ---
 ## Getting Started :
