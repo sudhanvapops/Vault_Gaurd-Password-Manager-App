@@ -14,9 +14,17 @@ const Mainui = () => {
         siteName: '',
         username: '',
         password: ''
-      });
+    });
     const [edit, setEdit] = useState(false)
+
     let ref = useRef()
+
+
+    // Function to copy to clipbord
+    const handleCopy = async (copytext) => {
+        await navigator.clipboard.writeText(copytext);
+    };
+
 
     // To Load The Data From the Database
     const fetchData = async () => {
@@ -58,26 +66,27 @@ const Mainui = () => {
                     }}>
                     <div className='flex gap-3'>
                         <label className='font-bold text-lg text-[#1E3E62] mx-1 px-6 cursor-pointer' htmlFor="link_">Site:</label>
-                        <input className="border-2 w-[115%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='Enter the Website link' id='link_' name='link' value={formData.link} onChange={(e) => setFormData({ ...formData, link: e.target.value })}/>
+                        <input className="border-2 w-[115%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='Enter the Website link' id='link_' name='link' value={formData.link} onChange={(e) => setFormData({ ...formData, link: e.target.value })} autoComplete="off"/>
 
                         <label className='font-bold text-lg text-[#1E3E62] px-6 cursor-pointer' htmlFor="siteName">SiteName:</label>
                         <input className="border-2 w-[118%] border-[#FF6500] rounded-3xl px-5 font-bold text-[#1E3E62] text-xl" type="text" placeholder='SiteName' id='siteName' name='siteName' value={formData.siteName}
-                        onChange={(e) => setFormData({ ...formData, siteName: e.target.value })}/>
+                            onChange={(e) => setFormData({ ...formData, siteName: e.target.value })} autoComplete="off" />
                     </div>
                     <div className='flex gap-3'>
                         <label className='font-bold text-lg text-[#1E3E62] mx-1 cursor-pointer' htmlFor="username">Username:</label>
                         <input className='border-2 w-[80%] border-[#FF6500] rounded-3xl px-5 text-xl font-bold text-[#1E3E62]' type="text" name="username" id="username" placeholder='Username' value={formData.username}
-                        onChange={(e) => setFormData({ ...formData, username: e.target.value })} />
+                            onChange={(e) => setFormData({ ...formData, username: e.target.value })} autoComplete="off"/>
                         <label className='font-bold text-lg text-[#1E3E62] mx-1 cursor-pointer' htmlFor="password">Passsword:</label>
                         <input className='border-2 w-[80%] border-[#FF6500] rounded-3xl px-5 text-xl font-bold text-[#1E3E62]' type="text" name="password" id="password" placeholder='Passsword' value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+                            onChange={(e) => setFormData({ ...formData, password: e.target.value })} autoComplete="off"/>
                     </div>
                     <div className='text-center my-2'>
                         <input className='font-bold text-lg text-[#FF6500]  border-2 border-[#FF6500] 
                         px-4 py-1 rounded-lg cursor-pointer
                         hover:scale-105 hover:bg-[#FF6500] hover:text-white
                         transition duration-75'
-                            type="submit" value={edit?"Edit":"Add Password"} />
+                            type="submit" value={edit ? "Edit" : "  Add Password"} />
+                        
                     </div>
                 </form>
             </div>
@@ -97,16 +106,19 @@ const Mainui = () => {
                         {data.length > 0 ? (
                             data.map((item, index) => (
                                 <tr key={index} className='border border-black'>
-                                    <td className='min-w-32 p-2'>{item.siteName}</td>
-                                    <td className='min-w-32 p-2'>{item.username}</td>
-                                    <td className='min-w-32 p-2 flex justify-center items-center'>{item.password}</td>
+                                    <td className='min-w-32 p-2 hover:cursor-pointer'><a href={`${item.link}`} target="_blank">{item.siteName}</a></td>
+                                    <td className='min-w-32 p-2 '>{item.username}</td>
+                                    <td className='min-w-32 p-2  flex justify-center items-center'>{item.password} <button className="w-10 flex items-center " onClick={async () => {
+                                        await handleCopy(item.password)
+                                    }} ><img src="/gifs/copy.gif" alt="copy" srcset="" />Copy</button></td>
                                     <td className="actions" >
-                                        <div>
-                                            <button className="delete mx-4" onClick={
-                                                async ()=>{
+                                        <div className="flex items-center justify-center">
+                                            <button className="delete mx-4 " onClick={
+                                                async () => {
                                                     await deleteData(item._id)
-                                                    fetchData()}
-                                                } >
+                                                    fetchData()
+                                                }
+                                            } >
                                                 <lord-icon
                                                     src="https://cdn.lordicon.com/hwjcdycb.json"
                                                     stroke="bold"
@@ -114,13 +126,13 @@ const Mainui = () => {
                                                 >
                                                 </lord-icon>
                                             </button>
-                                            <button className="edit mx-4" onClick={() =>
-                                                 {
-                                                    editData(item,setFormData)
-                                                    setEdit(true)
-                                                    fetchData()
-                                                }
-                                                 } >
+
+                                            <button className="edit mx-4" onClick={() => {
+                                                editData(item, setFormData)
+                                                setEdit(true)
+                                                fetchData()
+                                            }
+                                            } >
                                                 <lord-icon
                                                     src="https://cdn.lordicon.com/exymduqj.json"
                                                     trigger="hover"
