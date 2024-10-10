@@ -15,6 +15,7 @@ A simple password manager app built with **Next.js 14**, allowing users to store
   - Authentication for user logins.
   - Support for multiple users with their own separate data collections.
   - Still Didn't made Responsive Due to some Issues So make it Responisve.
+  - Making a functional Navbar, After Implementing Authentication.
 
 ---
 
