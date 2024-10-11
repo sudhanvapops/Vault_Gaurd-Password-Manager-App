@@ -47,4 +47,4 @@ Before running the app locally, ensure that you have the following installed:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/password-manager-app.git
+   git clone https://github.com/sudhanvapops/Vault_Gaurd-Password-Manager-App-.git
