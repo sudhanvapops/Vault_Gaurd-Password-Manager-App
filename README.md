@@ -48,3 +48,8 @@ Before running the app locally, ensure that you have the following installed:
 
    ```bash
    git clone https://github.com/sudhanvapops/Vault_Gaurd-Password-Manager-App-.git
+
+2. Install Node Modules:
+
+   ```bash
+   npm i 
